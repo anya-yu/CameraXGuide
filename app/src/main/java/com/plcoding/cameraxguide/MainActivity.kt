@@ -16,18 +16,26 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -42,6 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
@@ -87,14 +96,41 @@ class MainActivity : ComponentActivity() {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
+                            .background(Color.White) // Set the background to white
                             .padding(padding)
                     ) {
-                        CameraPreview(
-                            controller = controller,
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier
                                 .fillMaxSize()
-                        )
+                        ) {
+                            Spacer(modifier = Modifier.height(20.dp)) // Space above camera view
 
+                            // Camera preview area
+                            CameraPreview(
+                                controller = controller,
+                                modifier = Modifier
+                                    .size(250.dp) // Camera view square size
+                            )
+
+                            Spacer(modifier = Modifier.height(150.dp)) // Space between camera view and buttons
+
+                            // Purple buttons below the camera view
+                            MeasureButton(text = "Measure Heart Rate")
+                            Spacer(modifier = Modifier.height(8.dp)) // Space between buttons
+                            MeasureButton(text = "Measure Respiratory Rate")
+                            Spacer(modifier = Modifier.height(40.dp)) // Space between buttons
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                ActionButton(text = "Upload Signs")
+                                Spacer(modifier = Modifier.width(8.dp)) // Space between the two buttons
+                                ActionButton(text = "Symptoms ->")
+                            }
+                        }
+
+                        // IconButtons within the CameraPreview area
                         IconButton(
                             onClick = {
                                 controller.cameraSelector =
@@ -103,11 +139,13 @@ class MainActivity : ComponentActivity() {
                                     } else CameraSelector.DEFAULT_BACK_CAMERA
                             },
                             modifier = Modifier
+                                .align(Alignment.TopStart)
                                 .offset(16.dp, 16.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Cameraswitch,
-                                contentDescription = "Switch camera"
+                                contentDescription = "Switch camera",
+                                tint = Color(0xFF87CEEB)
                             )
                         }
 
@@ -127,7 +165,8 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Photo,
-                                    contentDescription = "Open gallery"
+                                    contentDescription = "Open gallery",
+                                    tint = Color(0xFF87CEEB)
                                 )
                             }
                             IconButton(
@@ -140,7 +179,8 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.PhotoCamera,
-                                    contentDescription = "Take photo"
+                                    contentDescription = "Take photo",
+                                    tint = Color(0xFF87CEEB)
                                 )
                             }
                         }
@@ -198,5 +238,28 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO,
         )
+    }
+}
+
+@Composable
+fun MeasureButton(text: String) {
+    Button(
+        onClick = { /* Add your functionality here */ },
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4682B4)), // Purple background
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(text = text, color = Color.White)
+    }
+}
+
+@Composable
+fun ActionButton(text: String) {
+    Button(
+        onClick = { /* Add your functionality here */ },
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4682B4)), // Purple background
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+    ) {
+        Text(text = text, color = Color.White)
     }
 }
